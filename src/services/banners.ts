@@ -1,4 +1,5 @@
 import apiClient from "@/lib/api-client";
+import { ENV } from "@/lib/env";
 
 export interface Banner {
   id: string;
@@ -27,8 +28,7 @@ export const bannersService = {
 
   // Получить URL изображения баннера
   getBannerImageUrl(bannerId: string): string {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-    return `${baseUrl}/api/storage/banner/images/${bannerId}`;
+    return `${ENV.API_URL}/storage/banner/images/${bannerId}`;
   },
 
   // Получить баннеры отсортированные по позиции

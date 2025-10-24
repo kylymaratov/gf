@@ -1,4 +1,5 @@
 import apiClient from "@/lib/api-client";
+import { ENV } from "@/lib/env";
 
 export interface Category {
   id: number;
@@ -43,9 +44,8 @@ export const categoriesService = {
 
   // Получить URL изображения категории
   getCategoryImageUrl(slug: string, opts?: { iconType?: string }): string {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
     const query = opts?.iconType ? `?iconType=${encodeURIComponent(opts.iconType)}` : "";
-    return `${baseUrl}/api/storage/category/images/${slug}${query}`;
+    return `${ENV.API_URL}/storage/category/images/${slug}${query}`;
   },
 };
 

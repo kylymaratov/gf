@@ -11,7 +11,8 @@ export function useProducts(params: ProductsParams & { enabled?: boolean } = {})
     queryParams.limit || 10,
     queryParams.sort || "default",
     queryParams.categorySlug || "all",
-    queryParams.withImage || false
+    queryParams.withImage || false,
+    queryParams.discountPrecent || "none"
   ];
   
   return useQuery({

@@ -57,6 +57,7 @@ export interface ProductsParams {
   withImage?: boolean;
   sort?: string;
   categorySlug?: string;
+  discountPrecent?: number;
 }
 
 export const productsService = {
@@ -68,6 +69,7 @@ export const productsService = {
     if (params.limit) searchParams.append('limit', params.limit.toString());
     if (params.withImage !== undefined) searchParams.append('withImage', params.withImage.toString());
     if (params.sort) searchParams.append('sort', params.sort);
+    if (params.discountPrecent !== undefined) searchParams.append('discountPrecent', params.discountPrecent.toString());
 
     const queryString = searchParams.toString();
     

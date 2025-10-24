@@ -17,6 +17,7 @@ interface CatalogPageContentProps {
     sort?: string;
     page?: string;
     limit?: string;
+    discount?: string;
   };
 }
 
@@ -34,6 +35,14 @@ export function CatalogPageContent({
   const [currentPage, setCurrentPage] = useState(parseInt(searchParams.page || '1'));
   const [showCount, setShowCount] = useState(parseInt(searchParams.limit || '20'));
   const [showFilters, setShowFilters] = useState(false);
+  const [discountFilter, setDiscountFilter] = useState(searchParams.discount ? parseInt(searchParams.discount) : undefined);
+
+  // Обновляем состояние при изменении URL параметров
+  useEffect(() => {
+    const discount = urlSearchParams.get('discount');
+    setDiscountFilter(discount ? parseInt(discount) : undefined);
+    setCurrentPage(1); // Сбрасываем страницу при изменении фильтров
+  }, [urlSearchParams]);
 
   // Используем клиентский хук для обновлений, но с начальными данными
   const { data: productsResponse, isLoading, error } = useProducts({
@@ -41,6 +50,7 @@ export function CatalogPageContent({
     limit: showCount,
     sort: sortBy as 'newest' | 'popular',
     withImage: true,
+    discountPrecent: discountFilter,
   });
 
   // Используем данные из хука или начальные данные
@@ -52,11 +62,13 @@ export function CatalogPageContent({
   const updateUrl = (newSort: string) => {
     const url = new URL(window.location.href);
     url.searchParams.set('sort', newSort);
+    // НЕ удаляем параметр discount - позволяем комбинировать
     window.history.replaceState({}, '', url.toString());
   };
 
   const handleSortChange = (newSort: string) => {
     setSortBy(newSort);
+    // НЕ сбрасываем фильтр акций - позволяем комбинировать
     setCurrentPage(1);
     updateUrl(newSort);
   };
@@ -114,7 +126,7 @@ export function CatalogPageContent({
             </Button>
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                Каталог товаров
+                {discountFilter ? 'Акционные товары' : 'Каталог товаров'}
               </h1>
               <p className="text-gray-600 mt-1">
                 {totalProducts} товаров
@@ -133,7 +145,11 @@ export function CatalogPageContent({
                   variant={sortBy === 'newest' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => handleSortChange('newest')}
-                  className="text-sm"
+                  className={`text-sm font-medium transition-all duration-200 ${
+                    sortBy === 'newest' 
+                      ? 'bg-[#ff6900] hover:bg-[#e55a00] text-white shadow-md scale-105' 
+                      : 'hover:bg-gray-50 hover:border-[#ff6900] hover:text-[#ff6900]'
+                  }`}
                 >
                   Новые
                 </Button>
@@ -141,9 +157,49 @@ export function CatalogPageContent({
                   variant={sortBy === 'popular' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => handleSortChange('popular')}
-                  className="text-sm"
+                  className={`text-sm font-medium transition-all duration-200 ${
+                    sortBy === 'popular' 
+                      ? 'bg-[#ff6900] hover:bg-[#e55a00] text-white shadow-md scale-105' 
+                      : 'hover:bg-gray-50 hover:border-[#ff6900] hover:text-[#ff6900]'
+                  }`}
                 >
                   Популярные
+                </Button>
+                <Button
+                  variant={discountFilter ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => {
+                    if (discountFilter) {
+                      // Сбрасываем фильтр акций, сохраняем текущую сортировку
+                      setDiscountFilter(undefined);
+                      setCurrentPage(1);
+                      const newParams = new URLSearchParams(urlSearchParams);
+                      newParams.delete('discount');
+                      // Сохраняем текущую сортировку
+                      if (sortBy) {
+                        newParams.set('sort', sortBy);
+                      }
+                      router.push(`/catalog?${newParams.toString()}`);
+                    } else {
+                      // Устанавливаем фильтр акций, сохраняем текущую сортировку
+                      setDiscountFilter(1);
+                      setCurrentPage(1);
+                      const newParams = new URLSearchParams(urlSearchParams);
+                      newParams.set('discount', '1');
+                      // Сохраняем текущую сортировку
+                      if (sortBy) {
+                        newParams.set('sort', sortBy);
+                      }
+                      router.push(`/catalog?${newParams.toString()}`);
+                    }
+                  }}
+                  className={`text-sm font-medium transition-all duration-200 ${
+                    discountFilter 
+                      ? 'bg-red-500 hover:bg-red-600 text-white shadow-md scale-105' 
+                      : 'hover:bg-gray-50 hover:border-red-500 hover:text-red-500'
+                  }`}
+                >
+                  Акции
                 </Button>
               </div>
             </div>

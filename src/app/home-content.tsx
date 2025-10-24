@@ -2,6 +2,7 @@
 
 import { Slider } from "@/components/ui/slider";
 import { ProductsSection } from "@/components/ui/products-section";
+import { DiscountProductsSection } from "@/components/ui/discount-products-section";
 import { PopularCategories } from "@/components/ui/popular-categories";
 import { RecentlyViewed } from "@/components/ui/recently-viewed";
 import { useBanners } from "@/hooks/use-banners";
@@ -55,6 +56,14 @@ export function HomePageContent({ initialBanners, initialError }: HomePageConten
           )}
         </div>
       </section>
+
+      {/* Discount Products Section */}
+      <DiscountProductsSection
+        title="Акционные товары"
+        limit={10}
+        discountPrecent={1}
+        showViewAll={true}
+      />
 
       {/* New Products Section */}
       <ProductsSection

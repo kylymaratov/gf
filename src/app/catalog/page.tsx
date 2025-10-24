@@ -15,20 +15,25 @@ export const metadata: Metadata = {
 };
 
 interface CatalogPageProps {
-  searchParams: {
+  searchParams: Promise<{
     sort?: string;
     page?: string;
     limit?: string;
-  };
+    discount?: string;
+  }>;
 }
 
 export default async function CatalogPage({ searchParams }: CatalogPageProps) {
+  // Await searchParams
+  const params = await searchParams;
+  
   // Получаем начальные данные на сервере
   const { products, error } = await getProductsSSR({
-    page: parseInt(searchParams.page || '1'),
-    limit: parseInt(searchParams.limit || '20'),
-    sort: searchParams.sort || 'newest',
+    page: parseInt(params.page || '1'),
+    limit: parseInt(params.limit || '20'),
+    sort: params.sort || 'newest',
     withImage: true,
+    discountPrecent: params.discount ? parseInt(params.discount) : undefined,
   });
 
   return (
@@ -43,7 +48,7 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
       <CatalogPageContent 
         initialProducts={products} 
         initialError={error}
-        searchParams={searchParams}
+        searchParams={params}
       />
     </Suspense>
   );

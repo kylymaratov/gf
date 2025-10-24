@@ -20,6 +20,7 @@ export async function getProductsSSR(params: {
   sort?: string;
   categorySlug?: string;
   withImage?: boolean;
+  discountPrecent?: number;
 }) {
   try {
     const products = await productsService.getProducts(params);

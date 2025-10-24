@@ -36,12 +36,12 @@ export function ScrollToTop() {
       {isVisible && (
         <Button
           onClick={scrollToTop}
-          className={`fixed bottom-6 right-6 z-50 h-12 w-12 rounded-full bg-[#ff6900] hover:bg-[#e55a00] text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 p-0 ${
+          className={`fixed right-4 sm:right-6 z-50 h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 rounded-full bg-[#ff6900] hover:bg-[#e55a00] text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 p-0 bottom-[calc(80px+env(safe-area-inset-bottom,0px))] lg:bottom-auto lg:top-[calc(100vh-100px)] ${
             isVisible ? 'animate-in fade-in slide-in-from-bottom-4' : ''
           }`}
           aria-label="Прокрутить вверх"
         >
-          <ArrowUp className="h-5 w-5" />
+          <ArrowUp className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" />
         </Button>
       )}
     </>

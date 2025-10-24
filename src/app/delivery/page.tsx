@@ -1,5 +1,17 @@
 import Link from "next/link";
+import { Metadata } from "next";
 import { Home } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Доставка и оплата - GeneralHub",
+  description: "Информация о доставке и способах оплаты. Быстрая доставка по всей России, удобные способы оплаты, гарантия качества.",
+  keywords: "доставка, оплата, способы оплаты, доставка по России, GeneralHub",
+  openGraph: {
+    title: "Доставка и оплата - GeneralHub",
+    description: "Информация о доставке и способах оплаты",
+    type: "website",
+  },
+};
 
 export default function DeliveryPage() {
   return (

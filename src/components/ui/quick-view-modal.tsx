@@ -9,6 +9,7 @@ import { Button } from "./button";
 import { Product } from "@/services/products";
 import { productsService } from "@/services/products";
 import { useCartStore } from "@/stores/cart-store";
+import { transitions } from "@/lib/view-transitions";
 
 interface QuickViewModalProps {
   product: Product | null;
@@ -126,7 +127,7 @@ export function QuickViewModal({ product, isOpen, onClose }: QuickViewModalProps
                         <div 
                           key={image.id}
                           className="w-full h-full flex-shrink-0 cursor-pointer"
-                          onClick={() => setIsFullscreen(true)}
+                          onClick={() => allImages.length > 0 && setIsFullscreen(true)}
                         >
                           <img
                             src={productsService.getProductImageUrl(image.id)}
@@ -165,15 +166,17 @@ export function QuickViewModal({ product, isOpen, onClose }: QuickViewModalProps
                   </div>
                 )}
 
-                {/* Fullscreen Button */}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute top-2 right-2 bg-white/80 hover:bg-white text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity"
-                  onClick={() => setIsFullscreen(true)}
-                >
-                  <Maximize2 className="h-4 w-4" />
-                </Button>
+                {/* Fullscreen Button - only show if there are images */}
+                {allImages.length > 0 && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-2 right-2 bg-white/80 hover:bg-white text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={() => setIsFullscreen(true)}
+                  >
+                    <Maximize2 className="h-4 w-4" />
+                  </Button>
+                )}
 
                 {/* Navigation Arrows */}
                 {allImages.length > 1 && (
@@ -336,7 +339,9 @@ export function QuickViewModal({ product, isOpen, onClose }: QuickViewModalProps
                                   onClick={() => {
                                     setShowLoginPopup(false);
                                     onClose();
-                                    router.push('/login');
+                                    transitions.slide(() => {
+                                      router.push('/login');
+                                    });
                                   }}
                                 >
                                   Войти
@@ -368,7 +373,7 @@ export function QuickViewModal({ product, isOpen, onClose }: QuickViewModalProps
       </div>
 
       {/* Fullscreen Image Viewer */}
-      {isFullscreen && currentImageUrl && createPortal(
+      {isFullscreen && currentImageUrl && allImages.length > 0 && createPortal(
         <div 
           className="fixed inset-0 z-[80] bg-black/95 flex items-center justify-center animate-in fade-in duration-200"
           onClick={() => setIsFullscreen(false)}

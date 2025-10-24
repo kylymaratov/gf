@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ShoppingCart, Heart } from "lucide-react";
-import { Product } from "@/types";
+import { Product } from "@/services/products";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/stores/cart-store";
 import { formatPrice } from "@/lib/utils";
@@ -24,17 +24,15 @@ export function ProductCard({ product }: ProductCardProps) {
     });
   };
 
-  const discountedPrice = product.discount
-    ? product.price * (1 - product.discount / 100)
-    : product.price;
+  const discountedPrice = product.discountedPrice || product.price;
 
   return (
-    <Link href={`/products/${product.id}`}>
+    <Link href={`/products/${product.slug}`}>
       <div className="group relative overflow-hidden rounded-lg border bg-card transition-all hover:shadow-lg">
         {/* Discount Badge */}
-        {product.discount && (
+        {product.discountPrecent && product.discountPrecent > 0 && (
           <div className="absolute top-2 left-2 z-10 rounded-md bg-destructive px-2 py-1 text-xs font-bold text-destructive-foreground">
-            -{product.discount}%
+            -{product.discountPrecent}%
           </div>
         )}
 
@@ -53,12 +51,40 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* Image */}
         <div className="relative aspect-square overflow-hidden bg-muted">
-          <Image
-            src={product.images[0] || "/placeholder.jpg"}
-            alt={product.name}
-            fill
-            className="object-cover transition-transform group-hover:scale-105"
-          />
+          {product.images[0]?.id ? (
+            <Image
+              src={`/api/storage/products/images/${product.images[0].id}`}
+              alt={product.name}
+              fill
+              className="object-cover transition-transform group-hover:scale-105"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                const parent = target.parentElement;
+                if (parent) {
+                  parent.innerHTML = `
+                    <div class="flex items-center justify-center h-full bg-gray-100 text-gray-400">
+                      <div class="text-center">
+                        <svg class="w-8 h-8 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                        </svg>
+                        <p class="text-xs">Нет изображения</p>
+                      </div>
+                    </div>
+                  `;
+                }
+              }}
+            />
+          ) : (
+            <div className="flex items-center justify-center h-full bg-gray-100 text-gray-400">
+              <div className="text-center">
+                <svg className="w-8 h-8 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                </svg>
+                <p className="text-xs">Нет изображения</p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Content */}
@@ -68,13 +94,11 @@ export function ProductCard({ product }: ProductCardProps) {
           </h3>
 
           {/* Rating */}
-          {product.rating && (
+          {product.ratingCount > 0 && (
             <div className="mb-2 flex items-center gap-1 text-xs text-muted-foreground">
               <span className="text-yellow-500">★</span>
-              <span>{product.rating.toFixed(1)}</span>
-              {product.reviewsCount && (
-                <span>({product.reviewsCount})</span>
-              )}
+              <span>4.5</span>
+              <span>({product.ratingCount})</span>
             </div>
           )}
 
@@ -83,7 +107,7 @@ export function ProductCard({ product }: ProductCardProps) {
             <span className="text-lg font-bold">
               {formatPrice(discountedPrice)}
             </span>
-            {product.discount && (
+            {product.discountPrecent && product.discountPrecent > 0 && (
               <span className="text-sm text-muted-foreground line-through">
                 {formatPrice(product.price)}
               </span>
@@ -91,7 +115,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
 
           {/* Stock Status */}
-          {product.stock > 0 ? (
+          {product.inStock ? (
             <Button
               className="w-full"
               size="sm"

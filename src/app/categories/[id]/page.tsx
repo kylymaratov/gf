@@ -11,8 +11,9 @@ import { ProductCard } from "@/components/ui/product-card";
 import { ProductListItem } from "@/components/ui/product-list-item";
 import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/pagination";
+import { CategoryIcon } from "@/components/ui/category-icon";
 import { transitions } from "@/lib/view-transitions";
-import { ChevronDown, Grid, List, Heart, ShoppingCart, Home } from "lucide-react";
+import { ChevronDown, ChevronUp, Grid, List, Heart, ShoppingCart, Home } from "lucide-react";
 
 interface CategoryPageProps {
   params: Promise<{
@@ -29,6 +30,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
   const [showCount, setShowCount] = useState(16);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
 
   // Fetch products for this category
   const { data: productsData, isLoading: productsLoading, error: productsError } = useProducts({
@@ -129,14 +131,32 @@ export default function CategoryPage({ params }: CategoryPageProps) {
           <span className="text-gray-900">{category.name}</span>
         </div>
 
-        <div className="flex gap-8">
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
           {/* Left Sidebar - Categories */}
-          <div className="w-80 bg-white rounded-lg shadow-sm sticky top-24 self-start">
+          <div className="w-full lg:w-80 bg-white rounded-lg shadow-sm lg:sticky lg:top-24 lg:self-start">
             <div className="px-4 py-3 border-b">
-              <h2 className="text-xl font-bold text-gray-900">Категории</h2>
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold text-gray-900">Категории</h2>
+                {/* Кнопка раскрытия/скрытия - только на адаптивных экранах */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
+                  className="lg:hidden p-1 h-8 w-8"
+                >
+                  {isCategoriesOpen ? (
+                    <ChevronUp className="h-4 w-4" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
             </div>
             
-            <div className="p-4 space-y-1 max-h-[calc(100vh-200px)] overflow-y-auto">
+            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${
+              isCategoriesOpen ? 'max-h-[calc(100vh-200px)] opacity-100' : 'max-h-0 opacity-0 lg:max-h-[calc(100vh-200px)] lg:opacity-100'
+            }`}>
+              <div className="p-4 space-y-1 overflow-y-auto">
               {categoriesLoading ? (
                 Array.from({ length: 8 }).map((_, i) => (
                   <div key={i} className="flex items-center gap-2 py-2 px-3 bg-gray-100 rounded-lg animate-pulse">
@@ -162,22 +182,12 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                       <div className={`w-5 h-5 flex items-center justify-center ${
                         isActive ? 'text-white' : 'text-gray-600 group-hover:text-[#ff6900]'
                       }`}>
-                        <img
-                          src={categoriesService.getCategoryImageUrl(cat.slug, { iconType: 'small' })}
-                          alt={cat.name}
-                          className="w-full h-full object-contain"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.style.display = 'none';
-                            const parent = target.parentElement;
-                            if (parent) {
-                              parent.innerHTML = `
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                                </svg>
-                              `;
-                            }
-                          }}
+                        <CategoryIcon
+                          slug={cat.slug}
+                          name={cat.name}
+                          className="w-full h-full"
+                          iconType="small"
+                          isActive={isActive}
                         />
                       </div>
                       
@@ -198,15 +208,16 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                   );
                 })
               )}
+              </div>
             </div>
           </div>
 
           {/* Main Content Area */}
           <div className="flex-1">
             {/* Controls Bar */}
-            <div className="bg-white rounded-lg p-4 shadow-sm mb-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
+            <div className="bg-white rounded-lg p-3 sm:p-4 shadow-sm mb-4 sm:mb-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
                   <span className="text-sm font-medium text-gray-700">Сортировка:</span>
                   <select 
                     value={sortBy}
@@ -221,7 +232,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                   </select>
                 </div>
                 
-                <div className="flex items-center gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
                   <span className="text-sm font-medium text-gray-700">Показать:</span>
                   <select 
                     value={showCount}
@@ -258,34 +269,38 @@ export default function CategoryPage({ params }: CategoryPageProps) {
 
             {/* Products Grid */}
             {productsLoading ? (
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="grid gap-4 sm:gap-6 grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {Array.from({ length: 8 }).map((_, i) => (
                   <div key={i} className="animate-pulse">
-                    <div className="h-48 bg-gray-200 rounded-lg mb-4"></div>
-                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                    <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                    <div className="h-40 sm:h-48 bg-gray-200 rounded-lg mb-4"></div>
+                    <div className="h-3 sm:h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                    <div className="h-2 sm:h-3 bg-gray-200 rounded w-1/2"></div>
                   </div>
                 ))}
               </div>
             ) : productsError ? (
               <div className="text-center py-12">
                 <p className="text-muted-foreground mb-4">
-                  Ошибка загрузки товаров. Попробуйте обновить страницу.
+                  {(productsError as any)?.status === 404 || (productsError as any)?.response?.status === 404 
+                    ? "Товаров в этой категории нет" 
+                    : "Ошибка загрузки товаров. Попробуйте обновить страницу."}
                 </p>
-                <Button onClick={() => window.location.reload()}>
-                  Повторить
-                </Button>
+                {((productsError as any)?.status !== 404 && (productsError as any)?.response?.status !== 404) && (
+                  <Button onClick={() => window.location.reload()}>
+                    Повторить
+                  </Button>
+                )}
               </div>
             ) : productsData?.products && productsData.products.length > 0 ? (
               <>
                 {viewMode === "grid" ? (
-                  <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  <div className="grid gap-4 sm:gap-6 grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {productsData.products.map((product, index) => (
                       <ProductCard key={`${product.sku}-${index}`} product={product} />
                     ))}
                   </div>
                 ) : (
-                  <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-3 sm:gap-4">
                     {productsData.products.map((product, index) => (
                       <ProductListItem key={`${product.sku}-${index}`} product={product} />
                     ))}

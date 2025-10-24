@@ -1,4 +1,16 @@
+import { Metadata } from "next";
 import { Mail, Phone, MapPin } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Контакты - GeneralHub",
+  description: "Свяжитесь с нами. Телефон, email, адрес. Мы всегда готовы помочь вам с выбором товаров и ответить на ваши вопросы.",
+  keywords: "контакты, телефон, email, адрес, GeneralHub, поддержка",
+  openGraph: {
+    title: "Контакты - GeneralHub",
+    description: "Свяжитесь с нами. Мы всегда готовы помочь вам",
+    type: "website",
+  },
+};
 
 export default function ContactsPage() {
   return (

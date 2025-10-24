@@ -13,7 +13,7 @@ export function RecentlyViewed() {
   const sliderRef = useRef<HTMLDivElement>(null);
   const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
 
-  const itemsPerSlide = 5; // Количество товаров на слайд
+  const itemsPerSlide = 5; // Количество товаров на слайд (5 в ряд)
   const totalSlides = Math.ceil((recentlyViewed?.length || 0) / itemsPerSlide);
 
   const goToPrevious = () => {
@@ -60,12 +60,12 @@ export function RecentlyViewed() {
     <section className="py-8 sm:py-12 lg:py-16 bg-gray-50">
       <div className="container mx-auto px-4">
         {/* Section Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6 sm:mb-8">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <History className="h-6 w-6 text-[#ff6900]" />
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-                Последние просмотренные
+              <History className="h-5 w-5 sm:h-6 sm:w-6 text-[#ff6900]" />
+              <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">
+                Просмотренные
               </h2>
             </div>
             <Button
@@ -80,80 +80,94 @@ export function RecentlyViewed() {
           </div>
         </div>
 
-        {/* Slider */}
-        <div className="relative">
-          {/* Navigation Arrows - вне контейнера */}
-          {totalSlides > 1 && (
-            <>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute -left-16 top-1/2 -translate-y-1/2 bg-white shadow-lg hover:bg-gray-50 text-gray-600 border border-gray-200 h-12 w-12 rounded-full transition-all duration-300 hover:scale-110 z-10"
-                onClick={() => {
-                  handleUserInteraction();
-                  goToPrevious();
-                }}
-              >
-                <ChevronLeft className="h-6 w-6" />
-              </Button>
-              
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute -right-16 top-1/2 -translate-y-1/2 bg-white shadow-lg hover:bg-gray-50 text-gray-600 border border-gray-200 h-12 w-12 rounded-full transition-all duration-300 hover:scale-110 z-10"
-                onClick={() => {
-                  handleUserInteraction();
-                  goToNext();
-                }}
-              >
-                <ChevronRight className="h-6 w-6" />
-              </Button>
-            </>
-          )}
-
-          {/* Slider Container */}
-          <div 
-            ref={sliderRef}
-            className="overflow-hidden"
-            onMouseEnter={handleUserInteraction}
-          >
-            <div 
-              className="flex transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-            >
-              {Array.from({ length: totalSlides }).map((_, slideIndex) => (
-                <div key={slideIndex} className="w-full flex-shrink-0">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                    {recentlyViewed
-                      .slice(slideIndex * itemsPerSlide, (slideIndex + 1) * itemsPerSlide)
-                      .map((product, index) => (
-                        <ProductCard key={`${product.sku}-${index}`} product={product} />
-                      ))}
-                  </div>
+        {/* Products - горизонтальный скролл на мобильных и планшетах, слайдер на десктопе */}
+        <div className="mb-6 sm:mb-8">
+          {/* Мобильный и планшетный режим - горизонтальный скролл */}
+          <div className="lg:hidden">
+            <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-4 scrollbar-hide">
+              {recentlyViewed.map((product, index) => (
+                <div key={`${product.sku}-${index}`} className="flex-shrink-0 w-48 sm:w-52 md:w-56">
+                  <ProductCard product={product} />
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Dots Navigation */}
-          {totalSlides > 1 && (
-            <div className="flex justify-center space-x-2 mt-6">
-              {Array.from({ length: totalSlides }).map((_, index) => (
-                <button
-                  key={index}
-                  className={`transition-all duration-300 rounded-full ${
-                    index === currentSlide 
-                      ? 'w-8 h-3 bg-[#ff6900]' 
-                      : 'w-3 h-3 bg-gray-300 hover:bg-gray-400'
-                  }`}
+          {/* Десктопный режим - слайдер */}
+          <div className="hidden lg:block relative">
+            {/* Navigation Arrows - вне контейнера */}
+            {totalSlides > 1 && (
+              <>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute -left-16 top-1/2 -translate-y-1/2 bg-white shadow-lg hover:bg-gray-50 text-gray-600 border border-gray-200 h-12 w-12 rounded-full transition-all duration-300 hover:scale-110 z-10"
                   onClick={() => {
                     handleUserInteraction();
-                    goToSlide(index);
+                    goToPrevious();
                   }}
-                />
-              ))}
+                >
+                  <ChevronLeft className="h-6 w-6" />
+                </Button>
+                
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute -right-16 top-1/2 -translate-y-1/2 bg-white shadow-lg hover:bg-gray-50 text-gray-600 border border-gray-200 h-12 w-12 rounded-full transition-all duration-300 hover:scale-110 z-10"
+                  onClick={() => {
+                    handleUserInteraction();
+                    goToNext();
+                  }}
+                >
+                  <ChevronRight className="h-6 w-6" />
+                </Button>
+              </>
+            )}
+
+            {/* Slider Container */}
+            <div 
+              ref={sliderRef}
+              className="overflow-hidden"
+              onMouseEnter={handleUserInteraction}
+            >
+              <div 
+                className="flex transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+              >
+                {Array.from({ length: totalSlides }).map((_, slideIndex) => (
+                  <div key={slideIndex} className="w-full flex-shrink-0">
+                    <div className="grid grid-cols-5 gap-6">
+                      {recentlyViewed
+                        .slice(slideIndex * itemsPerSlide, (slideIndex + 1) * itemsPerSlide)
+                        .map((product, index) => (
+                          <ProductCard key={`${product.sku}-${index}`} product={product} />
+                        ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          )}
+
+            {/* Dots Navigation */}
+            {totalSlides > 1 && (
+              <div className="flex justify-center space-x-2 mt-6">
+                {Array.from({ length: totalSlides }).map((_, index) => (
+                  <button
+                    key={index}
+                    className={`transition-all duration-300 rounded-full ${
+                      index === currentSlide 
+                        ? 'w-8 h-3 bg-[#ff6900]' 
+                        : 'w-3 h-3 bg-gray-300 hover:bg-gray-400'
+                    }`}
+                    onClick={() => {
+                      handleUserInteraction();
+                      goToSlide(index);
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </section>

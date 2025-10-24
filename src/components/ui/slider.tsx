@@ -56,102 +56,9 @@ export function Slider({ banners, autoPlay = true, autoPlayInterval = 5000 }: Sl
         className="flex transition-transform duration-500 ease-in-out"
         style={{ transform: `translateX(-${currentSlide * 100}%)` }}
       >
-        {banners.map((banner) => {
-          // Используем позицию из API с fallback на 'left'
-          const position = banner.contentPosition || 'left';
-          
-          const gradientClasses = {
-            left: 'bg-gradient-to-r from-black/70 via-black/40 to-transparent',
-            center: 'bg-gradient-to-r from-transparent via-black/60 to-transparent',
-            right: 'bg-gradient-to-r from-transparent via-black/40 to-black/70',
-          };
-          
-          return (
-          <div
-            key={banner.id}
-            className="w-full flex-shrink-0 relative min-h-[400px] md:min-h-[500px]"
-          >
-            {/* Background Image */}
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-              <img
-                src={bannersService.getBannerImageUrl(banner.id)}
-                alt={banner.title}
-                className="w-full h-full object-cover opacity-0 transition-opacity duration-700"
-                onLoad={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.style.opacity = '1';
-                }}
-                onError={(e) => {
-                  // Fallback если изображение не загрузилось
-                  const target = e.target as HTMLImageElement;
-                  const imageUrl = bannersService.getBannerImageUrl(banner.id);
-                  console.error('Failed to load banner image:', imageUrl);
-                  target.style.display = 'none';
-                  const parent = target.parentElement;
-                  if (parent) {
-                    parent.style.background = 'linear-gradient(135deg, #ff6900 0%, #e55a00 100%)';
-                    parent.innerHTML += `
-                      <div class="flex items-center justify-center h-full">
-                        <div class="text-center text-white px-4">
-                          <svg class="w-20 h-20 mx-auto mb-6 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                          </svg>
-                          <h3 class="text-2xl md:text-3xl font-bold mb-2">Изображение недоступно</h3>
-                          <p class="text-white/80 text-xs">ID: ${banner.id}</p>
-                        </div>
-                      </div>
-                    `;
-                  }
-                }}
-              />
-              {/* Enhanced Gradient Overlay - адаптируется к позиции контента */}
-              <div className={`absolute inset-0 ${gradientClasses[position]}`} />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-            </div>
-
-            {/* Content */}
-            <div className="relative h-full flex items-center">
-              <div className="container mx-auto px-4 md:px-20 lg:px-24 w-full">
-                <div className={`max-w-xl space-y-2 md:space-y-3 ${position === 'right' ? 'ml-auto text-right' : position === 'center' ? 'mx-auto text-center' : 'text-left'}`}>
-                  {/* Decorative line */}
-                  <div className={`w-10 h-0.5 bg-[#ff6900] rounded-full ${position === 'center' ? 'mx-auto' : ''}`}></div>
-                  
-                  {/* Title */}
-                  <h2 className="text-xl md:text-3xl lg:text-4xl font-bold text-white leading-tight drop-shadow-2xl">
-                    {banner.title}
-                  </h2>
-                  
-                  {/* Description */}
-                  <p className={`text-xs md:text-sm lg:text-base text-white/90 leading-relaxed drop-shadow-lg max-w-lg ${position === 'center' ? 'mx-auto' : ''}`}>
-                    {banner.description}
-                  </p>
-
-                  {/* Button - всегда показываем если есть хотя бы один из параметров */}
-                  <div className={`pt-1 md:pt-2 ${position === 'center' ? 'flex justify-center' : ''}`}>
-                    <button
-                      className="bg-[#ff6900] hover:bg-[#e55a00] text-white font-medium px-4 md:px-6 py-2 md:py-2.5 text-xs md:text-sm rounded-lg shadow-xl hover:shadow-[#ff6900]/50 transition-all duration-300 hover:scale-105 hover:-translate-y-1 inline-flex items-center gap-1.5"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        console.log('Banner button clicked:', { buttonTitle: banner.buttonTitle, openUrl: banner.openUrl });
-                        if (banner.openUrl) {
-                          window.open(banner.openUrl, '_blank');
-                        }
-                      }}
-                    >
-                      {banner.buttonTitle || 'Узнать больше'}
-                      <ChevronRight className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Decorative elements */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-[#ff6900]/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl pointer-events-none"></div>
-          </div>
-          );
-        })}
+        {banners.map((banner) => (
+          <BannerSlide key={banner.id} banner={banner} />
+        ))}
       </div>
 
       {/* Navigation Arrows - показываем только если больше 1 баннера */}
@@ -160,36 +67,144 @@ export function Slider({ banners, autoPlay = true, autoPlayInterval = 5000 }: Sl
           <Button
             variant="ghost"
             size="icon"
-            className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border border-white/20 h-9 w-9 md:h-10 md:w-10 rounded-lg transition-all duration-300 hover:scale-110 opacity-0 group-hover:opacity-100"
+            className="absolute left-2 sm:left-4 md:left-6 top-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border border-white/20 h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 rounded-lg transition-all duration-300 hover:scale-110 opacity-0 group-hover:opacity-100"
             onClick={goToPrevious}
           >
-            <ChevronLeft className="h-4 w-4 md:h-5 md:w-5" />
+            <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5" />
           </Button>
           
           <Button
             variant="ghost"
             size="icon"
-            className="absolute right-4 md:right-6 top-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border border-white/20 h-9 w-9 md:h-10 md:w-10 rounded-lg transition-all duration-300 hover:scale-110 opacity-0 group-hover:opacity-100"
+            className="absolute right-2 sm:right-4 md:right-6 top-1/2 -translate-y-1/2 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border border-white/20 h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 rounded-lg transition-all duration-300 hover:scale-110 opacity-0 group-hover:opacity-100"
             onClick={goToNext}
           >
-            <ChevronRight className="h-4 w-4 md:h-5 md:w-5" />
+            <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5" />
           </Button>
 
           {/* Dots Navigation */}
-          <div className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 flex space-x-2 bg-black/30 backdrop-blur-sm px-4 py-2 rounded-full">
+          <div className="absolute bottom-2 sm:bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 flex space-x-1 sm:space-x-2 bg-black/30 backdrop-blur-sm px-2 sm:px-4 py-1 sm:py-2 rounded-full">
             {banners.map((_, index) => (
               <button
                 key={index}
                 className={`transition-all duration-300 rounded-full ${
                   index === currentSlide 
-                    ? 'w-8 h-3 bg-[#ff6900] shadow-lg' 
-                    : 'w-3 h-3 bg-white/60 hover:bg-white/80 hover:scale-110'
+                    ? 'w-6 h-2 sm:w-8 sm:h-3 bg-[#ff6900] shadow-lg' 
+                    : 'w-2 h-2 sm:w-3 sm:h-3 bg-white/60 hover:bg-white/80 hover:scale-110'
                 }`}
                 onClick={() => goToSlide(index)}
                 title={`Слайд ${index + 1}`}
               />
             ))}
           </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+// Отдельный компонент для слайда баннера
+function BannerSlide({ banner }: { banner: Banner }) {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  
+  // Проверяем, есть ли текст для отображения
+  const hasContent = banner.title?.trim() || banner.description?.trim() || banner.buttonTitle?.trim();
+  
+  // Используем позицию из API с fallback на 'left'
+  const position = banner.contentPosition || 'left';
+  
+  const gradientClasses = {
+    left: 'bg-gradient-to-r from-black/80 via-black/50 to-transparent',
+    center: 'bg-gradient-to-r from-transparent via-black/70 to-transparent',
+    right: 'bg-gradient-to-r from-transparent via-black/50 to-black/80',
+  };
+  
+  return (
+    <div className="w-full flex-shrink-0 relative min-h-[300px] sm:min-h-[350px] md:min-h-[400px] lg:min-h-[500px] overflow-hidden rounded-lg">
+      {/* Background Image */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+        <img
+          src={bannersService.getBannerImageUrl(banner.id)}
+          alt={banner.title || 'Баннер'}
+          className="w-full h-full object-cover opacity-0 transition-opacity duration-700"
+          onLoad={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.style.opacity = '1';
+            setImageLoaded(true);
+          }}
+          onError={(e) => {
+            console.error('Failed to load banner image:', bannersService.getBannerImageUrl(banner.id));
+            setImageError(true);
+          }}
+        />
+        
+        {/* Показываем градиенты и контент только если изображение загрузилось успешно */}
+        {imageLoaded && !imageError && (
+          <>
+            {/* Enhanced Gradient Overlay - показываем только если есть контент */}
+            {hasContent && (
+              <>
+                <div className={`absolute inset-0 ${gradientClasses[position]}`} />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/20" />
+              </>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* Content - показываем только если изображение загрузилось успешно и есть контент */}
+      {imageLoaded && !imageError && hasContent && (
+        <div className="relative h-full flex items-center">
+          <div className="container mx-auto px-4 sm:px-6 md:px-12 lg:px-20 xl:px-24 w-full">
+            <div className={`max-w-lg sm:max-w-xl lg:max-w-2xl space-y-3 sm:space-y-4 ${position === 'right' ? 'ml-auto text-right' : position === 'center' ? 'mx-auto text-center' : 'text-left'}`}>
+              {/* Decorative line */}
+              <div className={`w-8 sm:w-10 h-0.5 bg-gradient-to-r from-[#ff6900] to-[#ff8533] rounded-full ${position === 'center' ? 'mx-auto' : ''}`}></div>
+              
+              {/* Title - показываем только если есть */}
+              {banner.title?.trim() && (
+                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-white leading-tight drop-shadow-2xl">
+                  {banner.title}
+                </h2>
+              )}
+              
+              {/* Description - показываем только если есть */}
+              {banner.description?.trim() && (
+                <p className={`text-sm sm:text-sm md:text-base lg:text-lg text-white/95 leading-relaxed drop-shadow-lg max-w-lg ${position === 'center' ? 'mx-auto' : ''}`}>
+                  {banner.description}
+                </p>
+              )}
+
+              {/* Button - показываем только если есть кнопка или URL */}
+              {(banner.buttonTitle?.trim() || banner.openUrl) && (
+                <div className={`pt-2 sm:pt-3 ${position === 'center' ? 'flex justify-center' : ''}`}>
+                  <button
+                    className="bg-gradient-to-r from-[#ff6900] to-[#ff8533] hover:from-[#e55a00] hover:to-[#e66a00] text-white font-semibold px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 text-sm sm:text-sm md:text-base rounded-xl shadow-xl hover:shadow-[#ff6900]/50 transition-all duration-300 hover:scale-105 hover:-translate-y-1 inline-flex items-center gap-2 sm:gap-2.5"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      console.log('Banner button clicked:', { buttonTitle: banner.buttonTitle, openUrl: banner.openUrl });
+                      if (banner.openUrl) {
+                        window.open(banner.openUrl, '_blank');
+                      }
+                    }}
+                  >
+                    {banner.buttonTitle || 'Узнать больше'}
+                    <ChevronRight className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Decorative elements - показываем только если изображение загрузилось и есть контент */}
+      {imageLoaded && !imageError && hasContent && (
+        <>
+          <div className="absolute top-0 right-0 w-32 h-32 sm:w-48 sm:h-48 lg:w-64 lg:h-64 bg-[#ff6900]/10 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="absolute bottom-0 left-0 w-48 h-48 sm:w-72 sm:h-72 lg:w-96 lg:h-96 bg-blue-500/5 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 bg-gradient-to-r from-[#ff6900]/5 to-[#ff8533]/5 rounded-full blur-2xl pointer-events-none"></div>
         </>
       )}
     </div>

@@ -18,7 +18,7 @@ export interface BannerImage {
   alt?: string;
 }
 
-export const bannersService = {
+export const bannerService = {
   // Получить все баннеры
   async getAllBanners(): Promise<Banner[]> {
     const { data } = await apiClient.get<Banner[]>("/banner/all");
@@ -28,12 +28,12 @@ export const bannersService = {
   // Получить URL изображения баннера
   getBannerImageUrl(bannerId: string): string {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-    return `${baseUrl}/api/storage/banner/images/${bannerId}`;
+    return `${baseUrl}/api/banner/${bannerId}`;
   },
 
   // Получить баннеры отсортированные по позиции
   async getBannersSorted(): Promise<Banner[]> {
-    const banners = await this.getAllBanners();
-    return banners.sort((a, b) => a.position - b.position);
+    const banner = await this.getAllBanners();
+    return banner.sort((a, b) => a.position - b.position);
   },
 };

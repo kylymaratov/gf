@@ -2,9 +2,9 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="border-t border-gray-700 dark:border-gray-800 bg-gray-800 dark:bg-gray-900 text-white">
+    <footer className="border-t border-gray-700 bg-gray-800 text-white">
       <div className="container mx-auto py-12 md:py-16 px-4">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* О компании */}
           <div>
             <h3 className="mb-4 text-lg font-semibold">GeneralHub</h3>

@@ -69,12 +69,12 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <div 
-      className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-xl hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 ease-out h-full flex flex-col group"
+      className="bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl hover:scale-[1.02] hover:-translate-y-1 transition-all duration-300 ease-out h-full flex flex-col group"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       {/* Product Image */}
-      <div className="relative aspect-square bg-gray-50 dark:bg-gray-700">
+      <div className="relative aspect-square bg-gray-50">
         <Link href={`/products/${product.slug}`} onClick={handleProductClick}>
           {currentImageUrl ? (
             <img
@@ -114,7 +114,7 @@ export function ProductCard({ product }: ProductCardProps) {
         {/* Stock Status */}
         {product.inStock && (
           <div className="absolute top-2 right-2">
-            <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+            <span className="bg-green-500 text-white text-[9px] sm:text-[10px] lg:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-medium">
               В НАЛИЧИИ
             </span>
           </div>
@@ -125,27 +125,27 @@ export function ProductCard({ product }: ProductCardProps) {
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 bg-white/80 hover:bg-white"
+            className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 bg-white/90 hover:bg-white shadow-sm"
             onClick={handleToggleFavorite}
           >
             <Heart 
-              className={`h-4 w-4 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} 
+              className={`h-3 w-3 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} 
             />
           </Button>
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 bg-white/80 hover:bg-white"
+            className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 bg-white/90 hover:bg-white shadow-sm"
             onClick={() => setIsQuickViewOpen(true)}
           >
-            <Eye className="h-4 w-4 text-gray-600" />
+            <Eye className="h-3 w-3 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4 text-gray-600" />
           </Button>
         </div>
 
         {/* Discount Badge */}
         {discount && discount > 0 && (
           <div className="absolute bottom-2 left-2">
-            <span className="bg-red-500 text-white text-xs px-2 py-1 rounded font-medium">
+            <span className="bg-red-500 text-white text-[9px] sm:text-[10px] lg:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded font-medium">
               -{discount}%
             </span>
           </div>
@@ -153,22 +153,22 @@ export function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* Product Info */}
-      <div className="p-4 flex flex-col flex-1">
+      <div className="p-3 sm:p-3 lg:p-4 flex flex-col flex-1">
         {/* Product Name */}
         <Link href={`/products/${product.slug}`} onClick={handleProductClick}>
-          <h3 className="font-medium text-gray-900 dark:text-gray-100 text-sm leading-tight mb-2 hover:text-[#ff6900] transition-colors line-clamp-2">
+          <h3 className="font-medium text-gray-900 text-xs sm:text-sm lg:text-base leading-tight mb-2 hover:text-[#ff6900] transition-colors line-clamp-2">
             {product.name}
           </h3>
         </Link>
 
         {/* Price */}
-        <div className="mb-3 flex-1 flex flex-col justify-end">
+        <div className="mb-2 sm:mb-3 flex-1 flex flex-col justify-end">
           {originalPrice && (
-            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+            <div className="text-[9px] sm:text-[10px] lg:text-xs text-gray-500 mb-1">
               Без скидки: <span className="line-through">{formattedOriginalPrice} с</span>
             </div>
           )}
-          <div className={`text-lg font-bold ${originalPrice ? 'text-[#ff6900]' : 'text-gray-900 dark:text-gray-100'}`}>
+          <div className={`text-sm sm:text-base lg:text-lg font-bold ${originalPrice ? 'text-[#ff6900]' : 'text-gray-900'}`}>
             {formattedPrice} с
           </div>
         </div>
@@ -176,13 +176,13 @@ export function ProductCard({ product }: ProductCardProps) {
         {/* Add to Cart Button */}
             <Button
               onClick={handleAddToCart}
-              className={`w-full h-8 text-xs font-medium flex items-center justify-center mt-auto ${
+              className={`w-full h-7 sm:h-7 lg:h-8 text-[9px] sm:text-[10px] lg:text-xs font-medium flex items-center justify-center mt-auto ${
                 isInCart 
                   ? 'bg-green-500 hover:bg-green-600' 
                   : 'bg-[#ff6900] hover:bg-[#e55a00]'
               } text-white`}
             >
-              <ShoppingCart className="h-4 w-4 mr-1" />
+              <ShoppingCart className="h-3 w-3 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4 mr-1" />
               {isInCart ? `В КОРЗИНЕ (${itemQuantity})` : 'В КОРЗИНУ'}
             </Button>
       </div>

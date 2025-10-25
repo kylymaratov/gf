@@ -10,6 +10,7 @@ import { productsService } from "@/services/products";
 import { useProduct } from "@/hooks/use-products";
 import { useCartStore } from "@/stores/cart-store";
 import { transitions } from "@/lib/view-transitions";
+import { SimilarProductsSlider } from "@/components/ui/similar-products-slider";
 
 interface ProductPageContentProps {
   product: any;
@@ -344,7 +345,7 @@ export function ProductPageContent({ product: initialProduct, error: initialErro
             {/* Category */}
             <div className="text-sm text-gray-500">
               Категория: {currentProduct.category ? (
-                <Link href={`/categories/${currentProduct.category.id}`} className="text-[#ff6900] hover:underline">
+                <Link href={`/categories/${currentProduct.category.slug}`} className="text-[#ff6900] hover:underline">
                   {currentProduct.category.name}
                 </Link>
               ) : (
@@ -403,12 +404,12 @@ export function ProductPageContent({ product: initialProduct, error: initialErro
               {currentProduct.inStock ? (
                 <>
                   <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span className="text-green-600 font-medium">В наличии</span>
+                  <span className="text-green-600 font-medium text-sm">В наличии</span>
                 </>
               ) : (
                 <>
                   <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                  <span className="text-red-600 font-medium">Нет в наличии</span>
+                  <span className="text-red-600 font-medium text-sm">Нет в наличии</span>
                 </>
               )}
             </div>
@@ -661,6 +662,11 @@ export function ProductPageContent({ product: initialProduct, error: initialErro
               )}
             </div>
           </div>
+        </div>
+
+        {/* Similar Products Section */}
+        <div className="mt-12">
+          <SimilarProductsSlider productSlug={slug} limit={10} />
         </div>
       </div>
 

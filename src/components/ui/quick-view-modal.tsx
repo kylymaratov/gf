@@ -221,7 +221,7 @@ export function QuickViewModal({ product, isOpen, onClose }: QuickViewModalProps
               {product.inStock && (
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span className="text-sm text-green-600 font-medium">В наличии</span>
+                  <span className="text-green-600 font-medium text-sm">В наличии</span>
                 </div>
               )}
             </div>

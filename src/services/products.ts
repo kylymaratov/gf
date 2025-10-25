@@ -138,5 +138,11 @@ export const productsService = {
         console.error('Failed to increment product views:', error);
       }
     }
+  },
+
+  // Получить похожие товары
+  async getSimilarProducts(productSlug: string, limit: number = 10): Promise<Product[]> {
+    const { data } = await apiClient.get<{ products: Product[]; limit: number }>(`/product/same/products?productSlug=${encodeURIComponent(productSlug)}&limit=${limit}`);
+    return data.products;
   }
 };

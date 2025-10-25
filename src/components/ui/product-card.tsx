@@ -114,7 +114,7 @@ export function ProductCard({ product }: ProductCardProps) {
         {/* Stock Status */}
         {product.inStock && (
           <div className="absolute top-2 right-2">
-            <span className="bg-green-500 text-white text-[9px] sm:text-[10px] lg:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-medium">
+            <span className="bg-green-500 text-white text-[8px] sm:text-[9px] lg:text-[10px] px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-medium">
               В НАЛИЧИИ
             </span>
           </div>

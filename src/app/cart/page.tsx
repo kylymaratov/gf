@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Trash2, Plus, Minus, ShoppingBag, Heart, Package, Truck, Shield } from "lucide-react";
+import { Trash2, Plus, Minus, ShoppingBag, Heart, Package, Truck, Shield, ArrowLeft } from "lucide-react";
 import { BackButton } from "@/components/ui/back-button";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/stores/cart-store";

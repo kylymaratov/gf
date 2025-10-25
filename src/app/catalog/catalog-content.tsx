@@ -6,7 +6,8 @@ import { ProductCard } from "@/components/ui/product-card";
 import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/ui/pagination";
 import { useProducts } from "@/hooks/use-products";
-import { ArrowLeft, Filter, Grid, List } from "lucide-react";
+import { Filter, Grid, List } from "lucide-react";
+import { BackButton } from "@/components/ui/back-button";
 import { transitions } from "@/lib/view-transitions";
 import { ProductListItem } from "@/components/ui/product-list-item";
 
@@ -121,9 +122,7 @@ export function CatalogPageContent({
         {/* Header */}
         <div className="mb-6 sm:mb-8">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={handleBackClick} className="h-8 w-8">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
+            <BackButton />
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
                 {discountFilter ? 'Акционные товары' : 'Каталог товаров'}

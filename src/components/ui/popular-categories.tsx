@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useCategories } from "@/hooks/use-categories";
 import { categoriesService } from "@/services/categories";
 import { transitions } from "@/lib/view-transitions";
-import { Package, ArrowRight } from "lucide-react";
+import { Grid3X3, ArrowRight } from "lucide-react";
 import { Button } from "./button";
 
 export function PopularCategories() {
@@ -25,11 +25,11 @@ export function PopularCategories() {
 
   if (isLoading) {
     return (
-      <section className="py-8 sm:py-12 lg:py-16">
+      <section className="py-4 sm:py-6 lg:py-8">
         <div className="container mx-auto px-4">
-          <div className="flex items-center gap-3 mb-6 sm:mb-8">
-            <div className="p-1.5 sm:p-2 bg-gray-100 rounded-lg">
-              <Package className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
+          <div className="flex items-center gap-3 mb-4 sm:mb-6">
+            <div className="p-1.5 sm:p-2 bg-gradient-to-br from-[#ff6900] to-[#ff8533] rounded-lg">
+              <Grid3X3 className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
             </div>
             <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">Популярные категории</h2>
           </div>
@@ -62,8 +62,8 @@ export function PopularCategories() {
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="flex items-center gap-3 mb-6 sm:mb-8">
-          <div className="p-1.5 sm:p-2 bg-gray-100 rounded-lg">
-            <Package className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600" />
+          <div className="p-1.5 sm:p-2 bg-gradient-to-br from-[#ff6900] to-[#ff8533] rounded-lg">
+            <Grid3X3 className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
           </div>
           <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">Популярные категории</h2>
         </div>
@@ -125,10 +125,10 @@ export function PopularCategories() {
           <Button
             variant="outline"
             onClick={handleAllCategoriesClick}
-            className="text-sm font-medium inline-flex items-center"
+            className="text-xs sm:text-sm font-medium inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2"
           >
             Все категории
-            <ArrowRight className="ml-2 h-4 w-4" />
+            <ArrowRight className="ml-1.5 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
           </Button>
         </div>
       </div>

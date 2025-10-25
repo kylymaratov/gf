@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Heart, ShoppingCart, Minus, Plus, ArrowLeft, Star, Truck, Shield, RotateCcw, X, ChevronLeft, ChevronRight, Maximize2, Home, Eye } from "lucide-react";
+import { Heart, ShoppingCart, Minus, Plus, Star, Truck, Shield, RotateCcw, X, ChevronLeft, ChevronRight, Maximize2, Home, Eye } from "lucide-react";
+import { BackButton } from "@/components/ui/back-button";
 import { Button } from "@/components/ui/button";
 import { productsService } from "@/services/products";
 import { useProduct } from "@/hooks/use-products";
@@ -196,15 +197,7 @@ export function ProductPageContent({ product: initialProduct, error: initialErro
         </div>
 
         {/* Back Button */}
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={handleBackClick}
-          className="mb-6 flex items-center gap-2"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Назад
-        </Button>
+        <BackButton className="mb-6" />
 
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12">

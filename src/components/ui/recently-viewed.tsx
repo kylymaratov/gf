@@ -57,17 +57,17 @@ export function RecentlyViewed() {
   }
 
   return (
-    <section className="py-8 sm:py-12 lg:py-16 bg-gray-50">
+    <section className="pt-0 pb-2 sm:pt-0 sm:pb-3 lg:pt-1 lg:pb-4 bg-gray-50">
       <div className="container mx-auto px-4">
         {/* Section Header */}
-        <div className="flex items-center justify-between mb-6 sm:mb-8">
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <History className="h-5 w-5 sm:h-6 sm:w-6 text-[#ff6900]" />
-              <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">
-                Просмотренные
-              </h2>
+            <div className="p-1.5 sm:p-2 bg-gradient-to-br from-[#ff6900] to-[#ff8533] rounded-lg">
+              <History className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
             </div>
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">
+              Просмотренные
+            </h2>
             <Button
               variant="ghost"
               size="sm"

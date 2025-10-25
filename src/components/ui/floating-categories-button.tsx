@@ -92,19 +92,19 @@ export const FloatingCategoriesButton = forwardRef<
         {/* Кнопка "Все категории" */}
         <Link
           href="/categories"
-          className="flex items-center gap-2 px-3 py-2 bg-[#ff6900]/10 hover:bg-[#ff6900]/20 transition-colors rounded-lg group"
+          className="flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 bg-[#ff6900]/10 hover:bg-[#ff6900]/20 transition-colors rounded-lg group"
           onClick={handleClose}
         >
-          <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center">
-            <svg className="h-4 w-4 text-[#ff6900]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center">
+            <svg className="h-3 w-3 sm:h-4 sm:w-4 text-[#ff6900]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
             </svg>
           </div>
-          <span className="text-sm font-medium text-[#ff6900] group-hover:text-[#e55a00]">
+          <span className="text-xs sm:text-sm font-medium text-[#ff6900] group-hover:text-[#e55a00]">
             Все категории
           </span>
           <div className="ml-auto">
-            <svg className="h-4 w-4 text-[#ff6900] group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="h-3 w-3 sm:h-4 sm:w-4 text-[#ff6900] group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
             </svg>
           </div>

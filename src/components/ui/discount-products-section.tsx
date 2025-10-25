@@ -46,9 +46,9 @@ export function DiscountProductsSection({
 
   if (isLoading) {
     return (
-      <section className="py-8 sm:py-12 lg:py-16">
+      <section className="py-4 sm:py-6 lg:py-8 bg-white">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-6 sm:mb-8">
+          <div className="flex items-center justify-between mb-4 sm:mb-6">
             <div className="flex items-center gap-3">
               <div className="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
               <div className="h-8 w-48 bg-gray-200 rounded animate-pulse"></div>
@@ -78,15 +78,15 @@ export function DiscountProductsSection({
   }
 
   return (
-    <section className="py-8 sm:py-12 lg:py-16">
+    <section className="py-4 sm:py-6 lg:py-8 bg-white">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6 sm:mb-8">
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-8 h-8 bg-red-500 rounded-lg">
               <Percent className="h-5 w-5 text-white" />
             </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">
               {title}
             </h2>
           </div>
@@ -116,7 +116,7 @@ export function DiscountProductsSection({
               <Button
                 onClick={handleShowMore}
                 variant="outline"
-                className="px-8 py-3 text-[#ff6900] border-[#ff6900] hover:bg-[#ff6900] hover:text-white transition-colors"
+                className="text-xs sm:text-sm px-4 py-2 sm:px-6 sm:py-2.5 text-[#ff6900] border-[#ff6900] hover:bg-[#ff6900] hover:text-white transition-colors"
               >
                 Показать еще
               </Button>
@@ -138,7 +138,7 @@ export function DiscountProductsSection({
             <div className="text-center mt-6">
               <Button
                 onClick={handleViewAllNavigation}
-                className="w-full sm:w-auto bg-[#ff6900] hover:bg-[#e55a00] text-white px-8 py-3"
+                className="w-full sm:w-auto bg-[#ff6900] hover:bg-[#e55a00] text-white text-xs sm:text-sm px-4 py-2 sm:px-6 sm:py-2.5"
               >
                 Все акции
               </Button>

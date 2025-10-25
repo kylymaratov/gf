@@ -93,7 +93,7 @@ export function ProductsSection({
 
   if (isLoading && (!enablePagination || currentPage === 1)) {
     return (
-      <section className="py-8 sm:py-12 lg:py-16">
+      <section className="py-4 sm:py-6 lg:py-8">
         <div className="container mx-auto px-4">
           <div className="flex items-center gap-3 mb-6 sm:mb-8">
             {getSectionIcon()}
@@ -179,10 +179,10 @@ export function ProductsSection({
   }
 
   return (
-    <section className="py-8 sm:py-12 lg:py-16">
+    <section className="py-4 sm:py-6 lg:py-8">
       <div className="container mx-auto px-4">
         {/* Header - заголовок и иконка */}
-        <div className="flex items-center justify-between mb-6 sm:mb-8">
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
           <div className="flex items-center gap-3">
             {getSectionIcon()}
             <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">{title}</h2>
@@ -224,7 +224,7 @@ export function ProductsSection({
         <div className="flex justify-center lg:hidden mb-6 sm:mb-8">
           <Button
             variant="outline"
-            className="text-sm font-medium"
+            className="text-xs sm:text-sm font-medium px-3 py-1.5 sm:px-4 sm:py-2"
             onClick={handleViewAllNavigation}
           >
             Смотреть все
@@ -236,7 +236,7 @@ export function ProductsSection({
           <div className="hidden lg:flex justify-center mt-8">
             <Button
               onClick={handleShowMore}
-              className="bg-[#ff6900] hover:bg-[#e55a00] text-white px-8 py-3 rounded-lg font-medium"
+              className="bg-[#ff6900] hover:bg-[#e55a00] text-white text-sm px-6 py-2.5 rounded-lg font-medium"
               disabled={isLoading}
             >
               {isLoading ? "Загрузка..." : "Показать еще"}

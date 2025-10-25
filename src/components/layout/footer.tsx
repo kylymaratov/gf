@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="border-t border-gray-700 bg-gray-800 text-white">
+    <footer className="border-t border-gray-900 bg-black text-white">
       <div className="container mx-auto py-12 md:py-16 px-4">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* О компании */}
@@ -78,7 +78,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-gray-700 pt-8 text-center text-sm text-gray-300">
+        <div className="mt-12 border-t border-gray-800 pt-8 text-center text-sm text-gray-300">
           <p>&copy; {new Date().getFullYear()} GeneralHub. Все права защищены.</p>
         </div>
       </div>

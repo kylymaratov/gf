@@ -14,6 +14,7 @@ import { Pagination } from "@/components/ui/pagination";
 import { CategoryIcon } from "@/components/ui/category-icon";
 import { transitions } from "@/lib/view-transitions";
 import { ChevronDown, ChevronUp, Grid, List, Heart, ShoppingCart, Home } from "lucide-react";
+import { BackButton } from "@/components/ui/back-button";
 
 interface CategoryPageProps {
   params: Promise<{
@@ -118,17 +119,23 @@ export default function CategoryPage({ params }: CategoryPageProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto py-8 px-4">
-        {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm text-gray-600 mb-6">
-          <Link href="/" className="hover:text-[#ff6900] transition-colors flex items-center">
-            <Home className="h-4 w-4" />
-          </Link>
-          <span>/</span>
-          <Link href="/categories" className="hover:text-[#ff6900] transition-colors">
-            Категории
-          </Link>
-          <span>/</span>
-          <span className="text-gray-900">{category.name}</span>
+        {/* Back Button and Breadcrumb */}
+        <div className="flex items-center gap-4 mb-6">
+          {/* Back Button */}
+          <BackButton />
+
+          {/* Breadcrumb */}
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <Link href="/" className="hover:text-[#ff6900] transition-colors flex items-center">
+              <Home className="h-4 w-4" />
+            </Link>
+            <span className="text-gray-400">/</span>
+            <Link href="/categories" className="hover:text-[#ff6900] transition-colors">
+              Категории
+            </Link>
+            <span className="text-gray-400">/</span>
+            <span className="text-gray-900 font-medium">{category.name}</span>
+          </div>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">

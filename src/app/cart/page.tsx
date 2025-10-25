@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft, Heart, Package, Truck, Shield } from "lucide-react";
+import { Trash2, Plus, Minus, ShoppingBag, Heart, Package, Truck, Shield } from "lucide-react";
+import { BackButton } from "@/components/ui/back-button";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/stores/cart-store";
 import { productsService } from "@/services/products";
@@ -75,14 +76,7 @@ export default function CartPage() {
       <div className="container mx-auto px-4 py-6 sm:py-8 lg:py-12">
         {/* Header */}
         <div className="mb-6 sm:mb-8">
-          <Button
-            variant="ghost"
-            onClick={() => window.history.back()}
-            className="mb-4 sm:mb-6 text-sm"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Назад
-          </Button>
+          <BackButton className="mb-4 sm:mb-6" onClick={() => window.history.back()} />
           <div className="flex items-center justify-between">
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
               Корзина

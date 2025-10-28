@@ -1,13 +1,20 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { Trash2, Plus, Minus, ShoppingBag, Heart, Package, Truck, Shield, ArrowLeft } from "lucide-react";
 import { BackButton } from "@/components/ui/back-button";
 import { Button } from "@/components/ui/button";
+import { OrderForm } from "@/components/ui/order-form";
+import { OrderSuccessModal } from "@/components/ui/order-success-modal";
 import { useCartStore } from "@/stores/cart-store";
 import { productsService } from "@/services/products";
+import { toast } from "sonner";
 
 export default function CartPage() {
+  const [showOrderForm, setShowOrderForm] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [createdOrderId, setCreatedOrderId] = useState<string>("");
   const { 
     items, 
     removeItem, 
@@ -18,6 +25,22 @@ export default function CartPage() {
     getTotalDiscount,
     getTotalDiscountPercent
   } = useCartStore();
+
+  const handleOrderSuccess = (orderId?: string) => {
+    setShowOrderForm(false);
+    if (orderId) {
+      setCreatedOrderId(orderId);
+      setShowSuccessModal(true);
+    } else {
+      // Дополнительное уведомление об успехе
+      setTimeout(() => {
+        toast.success("🎉 Заказ оформлен!", {
+          description: "Ваш заказ принят в обработку. Ожидайте звонка от менеджера.",
+          duration: 4000,
+        });
+      }, 100);
+    }
+  };
 
   if (items.length === 0) {
     return (
@@ -238,7 +261,7 @@ export default function CartPage() {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="sticky top-20 bg-white rounded-lg sm:rounded-xl border border-gray-200 p-4 sm:p-6 shadow-sm">
+            <div className="sticky top-20 bottom-4 sm:bottom-auto bg-white rounded-lg sm:rounded-xl border border-gray-200 p-4 sm:p-6 shadow-sm mb-4 sm:mb-0">
               <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">
                 Итого заказа
               </h2>
@@ -303,6 +326,7 @@ export default function CartPage() {
                 <Button 
                   className="w-full h-10 sm:h-12 bg-[#ff6900] hover:bg-[#e55a00] text-white font-semibold text-sm sm:text-base"
                   size="lg"
+                  onClick={() => setShowOrderForm(true)}
                 >
                   Оформить заказ
                 </Button>
@@ -321,6 +345,25 @@ export default function CartPage() {
           </div>
         </div>
       </div>
+
+      {/* Order Form Modal */}
+      {showOrderForm && (
+        <OrderForm
+          onClose={() => setShowOrderForm(false)}
+          onSuccess={handleOrderSuccess}
+        />
+      )}
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <OrderSuccessModal
+          orderId={createdOrderId}
+          onClose={() => {
+            setShowSuccessModal(false);
+            setCreatedOrderId("");
+          }}
+        />
+      )}
     </div>
   );
 }

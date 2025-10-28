@@ -111,3 +111,6 @@ export interface ProductFilters {
   sortOrder?: "asc" | "desc";
 }
 
+// Export order types
+export * from './order';
+

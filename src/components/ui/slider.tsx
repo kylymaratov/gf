@@ -53,11 +53,6 @@ export function Slider({ banners, autoPlay = true, autoPlayInterval = 5000 }: Sl
     });
   };
 
-  const handleBannerClick = (banner: Banner) => {
-    if (banner.openUrl) {
-      window.open(banner.openUrl, '_blank');
-    }
-  };
 
   // Touch event handlers for swipe functionality
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -132,7 +127,9 @@ export function Slider({ banners, autoPlay = true, autoPlayInterval = 5000 }: Sl
           }}
         >
           {banners.map((banner) => (
-            <BannerSlide key={banner.id} banner={banner} />
+            <div key={banner.id} className="w-full flex-shrink-0">
+              <BannerSlide banner={banner} />
+            </div>
           ))}
         </div>
 
@@ -187,18 +184,6 @@ function BannerSlide({ banner }: { banner: Banner }) {
   // Проверяем, есть ли текст для отображения
   const hasContent = banner.title?.trim() || banner.description?.trim() || banner.buttonTitle?.trim();
   
-  // Отладочная информация
-  console.log('BannerSlide render:', {
-    id: banner.id,
-    title: banner.title,
-    description: banner.description,
-    buttonTitle: banner.buttonTitle,
-    hasContent,
-    imageLoaded,
-    imageError,
-    imageUrl: bannersService.getBannerImageUrl(banner.id)
-  });
-  
   // Используем позицию из API с fallback на 'left'
   const position = banner.contentPosition || 'left';
   
@@ -209,64 +194,39 @@ function BannerSlide({ banner }: { banner: Banner }) {
   };
   
   return (
-    <div className="w-full flex-shrink-0 relative min-h-[300px] sm:min-h-[350px] md:min-h-[400px] lg:min-h-[500px] overflow-hidden rounded-lg">
-      {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-gray-100 overflow-hidden"
-        style={{
-          backgroundImage: imageLoaded && !imageError ? `url(${bannersService.getBannerImageUrl(banner.id)})` : 'none',
-          backgroundSize: 'contain',
-          backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center',
-          opacity: imageLoaded ? 1 : 0,
-          transition: 'opacity 0.7s ease-in-out'
-        }}
-      >
-        {/* Скрытое изображение для отслеживания загрузки */}
+    <div className="relative w-full h-[300px] sm:h-[350px] md:h-[400px] lg:h-[500px] overflow-hidden rounded-lg">
+      {/* Background Image via <img> */}
+      <div className="absolute inset-0 bg-gray-100 z-0">
         {!imageError && (
           <img
             src={bannersService.getBannerImageUrl(banner.id)}
-            alt=""
-            className="hidden"
-            onLoad={() => {
-              setImageLoaded(true);
-              console.log('✅ Banner image loaded successfully:', {
-                bannerId: banner.id,
-                imageUrl: bannersService.getBannerImageUrl(banner.id)
-              });
-            }}
-            onError={() => {
-              console.error('❌ Failed to load banner image:', {
-                bannerId: banner.id,
-                imageUrl: bannersService.getBannerImageUrl(banner.id)
-              });
-              setImageError(true);
-            }}
+            alt={banner.title || ''}
+            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+            style={{ opacity: imageLoaded ? 1 : 0 }}
+            onLoad={() => setImageLoaded(true)}
+            onError={() => setImageError(true)}
           />
         )}
-        
-        {/* Временный fallback для тестирования */}
+
+        {/* Loading state */}
         {!imageLoaded && !imageError && (
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-            <div className="text-center text-white">
-              <div className="text-4xl mb-2">🖼️</div>
-              <p className="text-sm">Загрузка изображения...</p>
-              <p className="text-xs mt-1 opacity-75">ID: {banner.id}</p>
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+            <div className="text-center text-gray-500">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#ff6900] mx-auto mb-2"></div>
+              <p className="text-sm">Загрузка...</p>
             </div>
           </div>
         )}
-        
-        {/* Fallback для ошибок */}
+
+        {/* Error state */}
         {imageError && (
           <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
             <div className="text-center text-gray-500">
               <div className="text-4xl mb-2">🖼️</div>
               <p className="text-sm">Изображение недоступно</p>
-              <p className="text-xs mt-1 opacity-75">ID: {banner.id}</p>
             </div>
           </div>
         )}
-        
       </div>
       
       {/* Градиент поверх изображения */}
@@ -277,14 +237,16 @@ function BannerSlide({ banner }: { banner: Banner }) {
 
       {/* Content - показываем если есть контент */}
       {hasContent && (
-        <div className="relative h-full flex items-center z-30">
-          <div className={`w-full px-4 sm:px-6 md:px-12 lg:px-20 xl:px-24 ${
-            position === 'center' ? 'container mx-auto' : ''
+        <div className="absolute inset-0 flex items-center z-30 p-4 sm:p-6 md:p-8 lg:p-12">
+          <div className={`w-full ${
+            position === 'center' ? 'text-center' : 
+            position === 'right' ? 'text-right' : 
+            'text-left'
           }`}>
-            <div className={`max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl space-y-2 sm:space-y-3 ${
-              position === 'right' ? 'ml-auto text-right' : 
-              position === 'center' ? 'mx-auto text-center' : 
-              'text-left'
+            <div className={`max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl space-y-3 sm:space-y-4 ${
+              position === 'right' ? 'ml-auto' : 
+              position === 'center' ? 'mx-auto' : 
+              ''
             }`}>
               {/* Decorative line */}
               <div className={`w-8 sm:w-10 h-0.5 bg-gradient-to-r from-[#ff6900] to-[#ff8533] rounded-full ${
@@ -293,43 +255,38 @@ function BannerSlide({ banner }: { banner: Banner }) {
                 ''
               }`}></div>
               
-              {/* Title - показываем только если есть */}
+              {/* Title */}
               {banner.title?.trim() && (
-                <h2 className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-white leading-tight drop-shadow-2xl">
+                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-white leading-tight drop-shadow-2xl">
                   {banner.title}
                 </h2>
               )}
               
-              {/* Description - показываем только если есть */}
+              {/* Description */}
               {banner.description?.trim() && (
-                <p className={`text-xs sm:text-sm md:text-sm lg:text-base text-white/95 leading-relaxed drop-shadow-lg max-w-sm sm:max-w-md md:max-w-lg ${
-                  position === 'center' ? 'mx-auto' : 
-                  position === 'right' ? 'ml-auto' : 
-                  ''
-                }`}>
+                <p className="text-sm sm:text-base md:text-lg text-white/95 leading-relaxed drop-shadow-lg">
                   {banner.description}
                 </p>
               )}
 
-              {/* Button - показываем только если есть кнопка или URL */}
+              {/* Button */}
               {(banner.buttonTitle?.trim() || banner.openUrl) && (
-                <div className={`pt-2 sm:pt-3 ${
+                <div className={`pt-2 ${
                   position === 'center' ? 'flex justify-center' : 
                   position === 'right' ? 'flex justify-end' : 
                   ''
                 }`}>
                   <button
-                    className="bg-gradient-to-r from-[#ff6900] to-[#ff8533] hover:from-[#e55a00] hover:to-[#e66a00] text-white font-semibold px-3 sm:px-4 md:px-5 py-1.5 sm:py-2 md:py-2.5 text-xs sm:text-sm md:text-sm rounded-lg shadow-xl hover:shadow-[#ff6900]/50 transition-all duration-300 hover:scale-105 hover:-translate-y-1 inline-flex items-center gap-1.5 sm:gap-2"
+                    className="bg-gradient-to-r from-[#ff6900] to-[#ff8533] hover:from-[#e55a00] hover:to-[#e66a00] text-white font-semibold px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base rounded-lg shadow-xl hover:shadow-[#ff6900]/50 transition-all duration-300 hover:scale-105 hover:-translate-y-1 inline-flex items-center gap-2"
                     onClick={(e) => {
                       e.stopPropagation();
-                      console.log('Banner button clicked:', { buttonTitle: banner.buttonTitle, openUrl: banner.openUrl });
                       if (banner.openUrl) {
                         window.open(banner.openUrl, '_blank');
                       }
                     }}
                   >
                     {banner.buttonTitle || 'Узнать больше'}
-                    <ChevronRight className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                    <ChevronRight className="h-4 w-4" />
                   </button>
                 </div>
               )}
@@ -338,12 +295,11 @@ function BannerSlide({ banner }: { banner: Banner }) {
         </div>
       )}
       
-      {/* Decorative elements - показываем только если изображение загрузилось и есть контент */}
+      {/* Decorative elements */}
       {imageLoaded && !imageError && hasContent && (
         <>
           <div className="absolute top-0 right-0 w-32 h-32 sm:w-48 sm:h-48 lg:w-64 lg:h-64 bg-[#ff6900]/10 rounded-full blur-3xl pointer-events-none"></div>
           <div className="absolute bottom-0 left-0 w-48 h-48 sm:w-72 sm:h-72 lg:w-96 lg:h-96 bg-blue-500/5 rounded-full blur-3xl pointer-events-none"></div>
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 bg-gradient-to-r from-[#ff6900]/5 to-[#ff8533]/5 rounded-full blur-2xl pointer-events-none"></div>
         </>
       )}
     </div>
